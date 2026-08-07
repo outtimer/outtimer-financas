@@ -1,0 +1,30 @@
+services:
+  db:
+    image: postgres:16
+    container_name: outtimer-financas-db-dev
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: outtimer
+      POSTGRES_PASSWORD: out@1991
+      POSTGRES_DB: outtimer-financas-dev
+    volumes:
+      - postgres-dev-data:/var/lib/postgresql/data
+
+  db-test:
+    image: postgres:16
+    container_name: outtimer-financas-db-test
+    restart: always
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_USER: outtimer
+      POSTGRES_PASSWORD: out@1991
+      POSTGRES_DB: outtimer-financas-test
+    volumes:
+      - postgres-dev-data:/var/lib/postgresql/data
+
+volumes:
+  postgres-dev-data:
+  postgres-test-data:
