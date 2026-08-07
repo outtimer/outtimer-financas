@@ -5,6 +5,16 @@
     "main": "src/index.js",
     "private": true,
     "scripts": {
-        "start": "echo \"api ainda não configurada\""
+        "dev": "tsx watch src/server.ts",
+        "build": "tsc",
+        "start": "node dist/server.js"
+    },
+    "dependencies": {
+        "fastify": "^5.11.2"
+    },
+    "devDependencies": {
+        "@types/node": "^26.2.0",
+        "tsx": "^4.23.11",
+        "typescript": "^6.0.3"
     }
 }
