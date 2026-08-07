@@ -1,0 +1,10 @@
+{
+    "name": "@outtimer/api",
+    "version": "1.0.0",
+    "description": "API do OutTimer Finanças",
+    "main": "src/index.js",
+    "private": true,
+    "scripts": {
+        "start": "echo \"api ainda não configurada\""
+    }
+}

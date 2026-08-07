@@ -1,0 +1,13 @@
+{
+    "name": "outtimer-financas",
+    "version": "1.0.0",
+    "description": "Aplicativo de controle financeiro pessoal",
+    "private": true,
+    "workspaces": [
+        "apps/*"
+    ],
+    "scripts": {
+        "start:web": "npm run start --workspace=@outtimer/web ",
+        "start:api": "npm run start --workspace=@outtimer/api "
+    }
+}

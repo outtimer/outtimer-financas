@@ -1,0 +1,10 @@
+{
+    "name": "@outtimer/web",
+    "version": "1.0.0",
+    "description": "Web do OutTimer Finanças",
+    "main": "src/index.js",
+    "private": true,
+    "scripts": {
+        "start": "echo \"web ainda não configurada\""
+    }
+}
