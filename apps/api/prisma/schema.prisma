@@ -11,3 +11,81 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+enum EntryType {
+  INCOME
+  EXPENSE
+}
+
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  entries   Entry[]
+  creditCards CreditCard[]
+  installments Installment[]
+  recurringExpenses RecurringExpense[]
+}
+
+model Entry {
+  id          String   @id @default(cuid())
+  description String
+  amount      Decimal @db.Decimal(10, 2)
+  type        EntryType
+  date        DateTime
+  paidAt      DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+}
+
+model CreditCard {
+  id          String   @id @default(cuid())
+  name        String
+  closingDay  Int
+  dueDay      Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+
+  installments Installment[]
+}
+
+model Installment {
+  id                String   @id @default(cuid())
+  description       String
+  amount            Decimal @db.Decimal(10, 2)
+  installmentNumber Int
+  totalInstallments Int
+  dueDate           DateTime
+  paidAt            DateTime?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  userId            String
+  user              User     @relation(fields: [userId], references: [id])
+
+  creditCardId      String
+  creditCard        CreditCard @relation(fields: [creditCardId], references: [id])
+}
+
+model RecurringExpense {
+  id          String   @id @default(cuid())
+  description String
+  amount      Decimal @db.Decimal(10, 2)
+  dayOfMonth  Int
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+}
