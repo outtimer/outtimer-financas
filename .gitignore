@@ -4,6 +4,7 @@ dist/
 build/
 .next/
 .nuxt/
+apps/api/src/generated/
 
 # Logs e Erros
 npm-debug.log*
