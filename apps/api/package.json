@@ -1,0 +1,11 @@
+{
+    "name" : "@outtimer/api",
+    "version" : "1.0.0",
+    "description" : "API do Aplicativo de Controle Financeiro Pessoal",
+    "private" : true,
+    "type" : "module",
+    "main" : "index.js",
+    "scripts": {
+        "start" : "echo \"api ainda não configurada\""
+    }
+}
