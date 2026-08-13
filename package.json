@@ -1,0 +1,10 @@
+{
+    "name": "outtimer-financas",
+    "version": "1.0.0",
+    "private": true,
+    "description": "Aplicativo de Controle Financeiro Pessoal",
+    "type": "module",
+    "workspaces": [
+        "apps/*"
+    ]
+}
