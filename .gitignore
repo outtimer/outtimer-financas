@@ -4,6 +4,11 @@ dist/
 build/
 .next/
 .nuxt/
+apps/api/src/generated/
+apps/api/.agents/
+apps/api/.claude/
+apps/api/.windsurf/
+apps/api/skills-lock.json
 
 # Logs e Erros
 npm-debug.log*
