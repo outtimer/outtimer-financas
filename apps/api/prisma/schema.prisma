@@ -1,0 +1,199 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum EntryType {
+  INCOME
+  EXPENSE
+}
+
+enum AccountType {
+  CHECKING
+  SAVINGS
+  CASH
+}
+
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  password  String
+  currency  String   @default("BRL")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  accounts          Account[]
+  creditCards       CreditCard[]
+  categories        Category[]
+  entries           Entry[]
+  installments      Installment[]
+  recurringExpenses RecurringExpense[]
+  budgets           Budget[]
+  goals             Goal[]
+}
+
+model Account {
+  id        String      @id @default(cuid())
+  name      String
+  type      AccountType
+  balance   Decimal     @db.Decimal(15, 2)
+  isActived Boolean     @default(true)
+  createdAt DateTime    @default(now())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  entries           Entry[]
+  recurringExpenses RecurringExpense[]
+}
+
+model CreditCard {
+  id         String   @id @default(cuid())
+  name       String
+  limit      Decimal  @db.Decimal(15, 2)
+  closingDay Int
+  dueDay     Int
+  isActive   Boolean  @default(true)
+  createdAt  DateTime @default(now())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  entries           Entry[]
+  installments      Installment[]
+  recurringExpenses RecurringExpense[]
+}
+
+model Category {
+  id    String    @id @default(cuid())
+  name  String
+  type  EntryType
+  icon  String?
+  color String?
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  parentId String?
+  parent   Category?  @relation("Subcategories", fields: [parentId], references: [id])
+  children Category[] @relation("Subcategories")
+
+  entries            Entry[]
+  installments       Installment[]
+  recurringsExpenses RecurringExpense[]
+  budgets            Budget[]
+}
+
+model Entry {
+  id          String    @id @default(cuid())
+  type        EntryType
+  amount      Decimal   @db.Decimal(15, 2)
+  description String
+  dueDate     DateTime
+  paidAt      DateTime?
+  notes       String?
+  createdAt   DateTime  @default(now())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  accountId String?
+  account   Account? @relation(fields: [accountId], references: [id])
+
+  creditCardId String?
+  creditCard   CreditCard? @relation(fields: [creditCardId], references: [id])
+
+  categoryId String?
+  category   Category? @relation(fields: [categoryId], references: [id])
+
+  installmentId String?
+  installment   Installment? @relation(fields: [installmentId], references: [id])
+
+  recurringExpenseId String?
+  recurringExpense   RecurringExpense? @relation(fields: [recurringExpenseId], references: [id])
+}
+
+model Installment {
+  id                String   @id @default(cuid())
+  description       String
+  totalAmount       Decimal  @db.Decimal(15, 2)
+  installmentAmount Decimal  @db.Decimal(15, 2)
+  totalInstallments Int
+  purchaseDate      DateTime
+  createdAt         DateTime @default(now())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  creditCardId String
+  creditCard   CreditCard @relation(fields: [creditCardId], references: [id])
+
+  categoryId String?
+  category   Category? @relation(fields: [categoryId], references: [id])
+
+  entries Entry[]
+}
+
+model RecurringExpense {
+  id              String    @id @default(cuid())
+  description     String
+  amount          Decimal   @db.Decimal(15, 2)
+  type            EntryType
+  dayOfMonth      Int
+  startDate       DateTime
+  endDate         DateTime?
+  lastGeneratedAt DateTime?
+  isActive        Boolean   @default(true)
+  createdAt       DateTime  @default(now())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  accountId String?
+  account   Account? @relation(fields: [accountId], references: [id])
+
+  creditCardId String?
+  creditCard   CreditCard? @relation(fields: [creditCardId], references: [id])
+
+  categoryId String?
+  category   Category? @relation(fields: [categoryId], references: [id])
+
+  entries Entry[]
+}
+
+model Budget {
+  id        String   @id @default(cuid())
+  amount    Decimal  @db.Decimal(15, 2)
+  month     Int
+  year      Int
+  createdAt DateTime @default(now())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id])
+}
+
+model Goal {
+  id            String    @id @default(cuid())
+  name          String
+  targetAmount  Decimal   @db.Decimal(15, 2)
+  currentAmount Decimal   @default(0) @db.Decimal(15, 2)
+  deadline      DateTime?
+  isCompleted   Boolean   @default(false)
+  createdAt     DateTime  @default(now())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
