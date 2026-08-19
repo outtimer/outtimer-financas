@@ -5,11 +5,15 @@ loadEnv({ path: path.resolve(import.meta.dirname, "../../../.env") });
 
 import Fastify from "fastify";
 import jwt from "@fastify/jwt";
+import cors from "@fastify/cors";
 import { healthRoutes } from "./modules/health/health.routes.js";
 import { authRoutes } from "./modules/auth/auth.routes.js";
 
 const app = Fastify({ logger: true });
 
+app.register(cors, {
+  origin: process.env["VITE_API_URL"] ? true : "http://localhost:5173",
+});
 app.register(jwt, {
   secret: process.env["JWT_SECRET"] ?? "",
   sign: { expiresIn: process.env["JWT_EXPIRES_IN"] ?? "7d" },
