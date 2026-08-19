@@ -6,6 +6,13 @@ import eslintConfigPrettier from "eslint-config-prettier";
 
 export default defineConfig([
   {
+    ignores: [
+      "**/vitest.config.ts",
+      "**/vite.config.ts",
+      "**/prisma.config.ts",
+    ],
+  },
+  {
     files: ["**/*.{js,mjs,cjs,ts,mts,cts}"],
     plugins: { js },
     extends: ["js/recommended"],
