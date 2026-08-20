@@ -46,6 +46,9 @@ jobs:
       - name: Instala dependências
         run: npm ci
 
+      - name: Gera o Prisma Client
+        run: npm exec --workspace=apps/api -- prisma generate
+
       - name: ESLint
         run: npx eslint .
 
