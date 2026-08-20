@@ -12,6 +12,7 @@ O **OutTimer Finanças** é uma aplicação web de controle financeiro pessoal d
 O sistema permite registrar manualmente despesas, receitas, gastos fixos, assinaturas, compras parceladas e compromissos financeiros recorrentes. O usuário tem controle total sobre cada lançamento — o que vence, o que foi pago e o que está pendente. A visão de relatórios e gráficos de evolução patrimonial complementa o controle.
 
 O projeto é desenvolvido em fases:
+
 - **Fase 1 (atual):** controle manual completo — lançamentos, parcelamentos, recorrências, orçamentos e metas
 - **Fase 2:** automações, importação de extratos e integrações com serviços externos
 - **Fase 3+:** conexão com Open Finance Brasil e gerenciamento bancário
@@ -33,24 +34,24 @@ O projeto é desenvolvido em fases:
 
 ### Visão geral
 
-| Camada | Tecnologia | Versão em uso | Fase |
-|---|---|---|---|
-| Frontend | React + TypeScript | React 19.x / TS 5 | 1 |
-| Build tool | Vite | 8.x | 1 |
-| Estilização | TailwindCSS | 4.x | 1 |
-| Data fetching | TanStack Query | 5.x | 1 |
-| Backend | Node.js + TypeScript | Node 24 LTS | 1 |
-| Framework API | Fastify | 5.x | 1 |
-| ORM | Prisma | 7.x | 1 |
-| Validação | Zod | 4.x | 1 |
-| Banco de dados | PostgreSQL | 16.x | 1 |
-| Containerização | Docker | 29.x | 1 |
-| CI/CD | GitHub Actions | — | 1 |
-| Qualidade de código | ESLint + Prettier | ESLint 9 / Prettier 3 | 1 |
-| Testes | Vitest | 3.x | 1 |
-| Git hooks | Husky | 9.x | 1 |
-| Commits | Conventional Commits | — | 1 |
-| Cache | Redis | 7.x | **2** |
+| Camada              | Tecnologia           | Versão em uso         | Fase  |
+| ------------------- | -------------------- | --------------------- | ----- |
+| Frontend            | React + TypeScript   | React 19.x / TS 5     | 1     |
+| Build tool          | Vite                 | 8.x                   | 1     |
+| Estilização         | TailwindCSS          | 4.x                   | 1     |
+| Data fetching       | TanStack Query       | 5.x                   | 1     |
+| Backend             | Node.js + TypeScript | Node 24 LTS           | 1     |
+| Framework API       | Fastify              | 5.x                   | 1     |
+| ORM                 | Prisma               | 7.x                   | 1     |
+| Validação           | Zod                  | 4.x                   | 1     |
+| Banco de dados      | PostgreSQL           | 16.x                  | 1     |
+| Containerização     | Docker               | 29.x                  | 1     |
+| CI/CD               | GitHub Actions       | —                     | 1     |
+| Qualidade de código | ESLint + Prettier    | ESLint 9 / Prettier 3 | 1     |
+| Testes              | Vitest               | 3.x                   | 1     |
+| Git hooks           | Husky                | 9.x                   | 1     |
+| Commits             | Conventional Commits | —                     | 1     |
+| Cache               | Redis                | 7.x                   | **2** |
 
 ### Diagrama de arquitetura e integração entre ferramentas
 
@@ -164,6 +165,7 @@ npm --version     # deve exibir 11.x.x
 ```
 
 > **Dica:** Em ambos os sistemas, considere instalar o **nvm** (Node Version Manager) — ele permite ter múltiplas versões do Node.js e trocar entre elas com um comando. Útil quando diferentes projetos exigem versões diferentes.
+>
 > - nvm para Windows: https://github.com/coreybutler/nvm-windows
 > - nvm para Linux/Mac: https://github.com/nvm-sh/nvm
 
@@ -188,7 +190,7 @@ Todo projeto Node.js tem um arquivo `package.json` que lista suas dependências.
 
 React é a biblioteca JavaScript mais usada no mundo para construir interfaces de usuário. A ideia central é dividir a interface em componentes reutilizáveis — um botão, um formulário, um gráfico — cada um com sua própria lógica e aparência.
 
-Diferente de manipular o HTML diretamente com `document.getElementById`, no React você descreve *como a interface deve parecer* dado um certo estado, e ele cuida de atualizar o DOM automaticamente.
+Diferente de manipular o HTML diretamente com `document.getElementById`, no React você descreve _como a interface deve parecer_ dado um certo estado, e ele cuida de atualizar o DOM automaticamente.
 
 - Site oficial: https://react.dev
 - Documentação: https://react.dev/learn
@@ -254,6 +256,7 @@ Prisma é a camada de acesso ao banco de dados. Em vez de escrever SQL manualmen
 A grande vantagem é o sistema de **migrations**: toda alteração no modelo de dados vira um arquivo de migração versionado, que o Prisma aplica automaticamente no banco. Isso garante que banco e código estejam sempre sincronizados.
 
 > **Nota de versão — por que 7.x e não 5.x:** o plano original previa Prisma 5.x. Na prática, o Prisma 5.x (e parte da linha 6.x) tem um bug de compatibilidade real com Node.js 23+ (`isError is not a function` no CLI, sem correção disponível naquelas versões). O Prisma 7.x reescreveu o motor interno — antes em Rust, agora em TypeScript — o que eliminou essa incompatibilidade. Isso trouxe mudanças estruturais relevantes:
+>
 > - Existe um arquivo `prisma.config.ts`, separado do `schema.prisma`, responsável pela conexão com o banco (em vez de depender só de uma `DATABASE_URL` lida automaticamente)
 > - O gerador do client mudou de `prisma-client-js` para `prisma-client`, e o client gerado passou a ficar dentro do próprio código-fonte do backend (`apps/api/src/generated/prisma`), tratado como parte do projeto — não mais escondido em `node_modules`. Esse diretório gerado **não é versionado** no Git.
 > - Como o client agora vive dentro de `apps/api`, o schema e as migrations também ficam colocalizados ali (`apps/api/prisma/`), e não mais soltos na raiz do monorepo — ver seção [3. Estrutura do projeto](#3-estrutura-do-projeto) para a estrutura de pastas atualizada.
@@ -393,6 +396,7 @@ Prettier formata o código automaticamente: indentação, aspas simples ou dupla
 Husky é uma ferramenta que executa scripts automaticamente em eventos do Git — por exemplo, antes de cada commit, rodar o ESLint e o Prettier. Isso garante que nenhum código com erro entre no repositório.
 
 Conventional Commits é uma convenção de nomenclatura para mensagens de commit:
+
 - `feat: adiciona tela de lançamentos`
 - `fix: corrige cálculo de parcelas pelo dia de fechamento`
 - `docs: atualiza documentação do modelo de dados`
@@ -523,15 +527,15 @@ Editor de código recomendado para o projeto. Gratuito, com suporte excelente a 
 
 **Extensões recomendadas para instalar no VS Code:**
 
-| Extensão | Finalidade |
-|---|---|
-| ESLint | Exibe erros do ESLint inline no editor |
-| Prettier - Code formatter | Formata ao salvar |
-| Prisma | Syntax highlight e autocomplete no schema.prisma |
-| Tailwind CSS IntelliSense | Autocomplete das classes do Tailwind |
-| GitLens | Histórico e blame do Git no editor |
-| Thunder Client | Testar rotas da API direto no VS Code |
-| Error Lens | Exibe erros e warnings inline na linha do código |
+| Extensão                  | Finalidade                                       |
+| ------------------------- | ------------------------------------------------ |
+| ESLint                    | Exibe erros do ESLint inline no editor           |
+| Prettier - Code formatter | Formata ao salvar                                |
+| Prisma                    | Syntax highlight e autocomplete no schema.prisma |
+| Tailwind CSS IntelliSense | Autocomplete das classes do Tailwind             |
+| GitLens                   | Histórico e blame do Git no editor               |
+| Thunder Client            | Testar rotas da API direto no VS Code            |
+| Error Lens                | Exibe erros e warnings inline na linha do código |
 
 ---
 
@@ -539,29 +543,29 @@ Editor de código recomendado para o projeto. Gratuito, com suporte excelente a 
 
 ### Conceito central
 
-O OutTimer Finanças é um sistema de **controle de compromissos financeiros**, não de movimentação bancária. Todo registro é feito manualmente pelo usuário. A pergunta central do sistema é: *"o que tenho para pagar, o que já paguei e o que está pendente?"*
+O OutTimer Finanças é um sistema de **controle de compromissos financeiros**, não de movimentação bancária. Todo registro é feito manualmente pelo usuário. A pergunta central do sistema é: _"o que tenho para pagar, o que já paguei e o que está pendente?"_
 
 O campo `paidAt` responde isso em cada lançamento: `null` significa pendente, uma data significa que foi pago naquele dia.
 
 ### Entidades e responsabilidades
 
-| Entidade | Responsabilidade |
-|---|---|
-| `User` | Raiz do sistema. Todo dado pertence a um usuário |
-| `Account` | Conta financeira do usuário (corrente, poupança, dinheiro físico) |
-| `CreditCard` | Cartão de crédito com dia de fechamento e vencimento da fatura |
-| `Category` | Classificação dos lançamentos. Suporta subcategorias |
-| `Entry` | Núcleo do sistema. Todo lançamento financeiro manual |
-| `Installment` | Compra parcelada — sempre vinculada a um cartão. Gera N Entries automaticamente |
-| `RecurringExpense` | Despesa recorrente mensal (fixos e assinaturas). Gera uma Entry por mês |
-| `Budget` | Orçamento mensal definido por categoria |
-| `Goal` | Meta financeira com valor alvo e prazo |
+| Entidade           | Responsabilidade                                                                |
+| ------------------ | ------------------------------------------------------------------------------- |
+| `User`             | Raiz do sistema. Todo dado pertence a um usuário                                |
+| `Account`          | Conta financeira do usuário (corrente, poupança, dinheiro físico)               |
+| `CreditCard`       | Cartão de crédito com dia de fechamento e vencimento da fatura                  |
+| `Category`         | Classificação dos lançamentos. Suporta subcategorias                            |
+| `Entry`            | Núcleo do sistema. Todo lançamento financeiro manual                            |
+| `Installment`      | Compra parcelada — sempre vinculada a um cartão. Gera N Entries automaticamente |
+| `RecurringExpense` | Despesa recorrente mensal (fixos e assinaturas). Gera uma Entry por mês         |
+| `Budget`           | Orçamento mensal definido por categoria                                         |
+| `Goal`             | Meta financeira com valor alvo e prazo                                          |
 
 ### Enums definidos
 
-| Enum | Valores | Observação |
-|---|---|---|
-| `EntryType` | `INCOME`, `EXPENSE` | Sem TRANSFER na Fase 1 |
+| Enum          | Valores                       | Observação                          |
+| ------------- | ----------------------------- | ----------------------------------- |
+| `EntryType`   | `INCOME`, `EXPENSE`           | Sem TRANSFER na Fase 1              |
 | `AccountType` | `CHECKING`, `SAVINGS`, `CASH` | Corrente, poupança, dinheiro físico |
 
 ### Decisões de modelagem
@@ -731,15 +735,15 @@ O modelo de dados completo é definido em `apps/api/prisma/schema.prisma`, que s
 
 ### Decisões de estrutura
 
-| Ponto | Decisão |
-|---|---|
-| Repositório | Monorepo único — frontend e backend no mesmo repositório |
-| Nome do repositório | `outtimer-financas` |
-| Organização do frontend | Por tipo — `components/`, `hooks/`, `services/`, `pages/` |
-| Organização do backend | Por domínio — cada recurso tem sua pasta dentro de `modules/` |
-| Tipos TypeScript | Cada lado tem os seus próprios — `web/src/types/` e `api/src/types/` |
-| Schema Prisma | Dentro de `apps/api/prisma/` — colocalizado com o backend, seguindo a arquitetura do Prisma 7.x (client gerado dentro de `apps/api/src/generated/`) |
-| Variáveis de ambiente | `.env.example` versionado no Git com comentários; `.env` real nunca sobe |
+| Ponto                   | Decisão                                                                                                                                             |
+| ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Repositório             | Monorepo único — frontend e backend no mesmo repositório                                                                                            |
+| Nome do repositório     | `outtimer-financas`                                                                                                                                 |
+| Organização do frontend | Por tipo — `components/`, `hooks/`, `services/`, `pages/`                                                                                           |
+| Organização do backend  | Por domínio — cada recurso tem sua pasta dentro de `modules/`                                                                                       |
+| Tipos TypeScript        | Cada lado tem os seus próprios — `web/src/types/` e `api/src/types/`                                                                                |
+| Schema Prisma           | Dentro de `apps/api/prisma/` — colocalizado com o backend, seguindo a arquitetura do Prisma 7.x (client gerado dentro de `apps/api/src/generated/`) |
+| Variáveis de ambiente   | `.env.example` versionado no Git com comentários; `.env` real nunca sobe                                                                            |
 
 ### Diagrama de estrutura de pastas
 
@@ -907,6 +911,7 @@ VITE_API_URL=http://localhost:3333
 ## 4. Fluxos da aplicação
 
 Cada fluxo é documentado em três níveis:
+
 - **Usuário** — o que a pessoa faz na tela
 - **Dados** — o caminho técnico da requisição
 - **Regras de negócio** — a lógica por trás da operação
@@ -916,6 +921,7 @@ Cada fluxo é documentado em três níveis:
 ### 4.1 Autenticação
 
 **Usuário:**
+
 ```
 Primeiro acesso:
   Acessa o app → clica em "Criar conta"
@@ -930,6 +936,7 @@ Acessos seguintes:
 ```
 
 **Dados:**
+
 ```mermaid
 sequenceDiagram
     participant U as Usuário
@@ -961,6 +968,7 @@ sequenceDiagram
 ```
 
 **Regras de negócio:**
+
 - Senha nunca armazenada — apenas o hash bcrypt
 - JWT expira em 7 dias (`JWT_EXPIRES_IN` do `.env`)
 - Email é único — cadastro duplicado retorna erro
@@ -972,6 +980,7 @@ sequenceDiagram
 ### 4.2 Lançamento simples (sem cartão)
 
 **Usuário:**
+
 ```
 Clica em "Novo lançamento"
 → preenche: descrição, valor, tipo (despesa/receita),
@@ -982,6 +991,7 @@ Clica em "Novo lançamento"
 ```
 
 **Dados:**
+
 ```mermaid
 sequenceDiagram
     participant U as Usuário
@@ -1003,6 +1013,7 @@ sequenceDiagram
 ```
 
 **Regras de negócio:**
+
 - `dueDate` é livre — o usuário define quando quiser
 - `paidAt: null` significa pendente por definição
 - Categoria e conta são opcionais — podem ser preenchidas depois
@@ -1012,6 +1023,7 @@ sequenceDiagram
 ### 4.3 Lançamento com cartão de crédito
 
 **Usuário:**
+
 ```
 Clica em "Novo lançamento"
 → preenche: descrição, valor, tipo, categoria (opcional)
@@ -1023,6 +1035,7 @@ Clica em "Novo lançamento"
 ```
 
 **Dados:**
+
 ```mermaid
 sequenceDiagram
     participant U as Usuário
@@ -1048,6 +1061,7 @@ sequenceDiagram
 ```
 
 **Regras de negócio:**
+
 ```mermaid
 flowchart TD
     A["purchaseDate.day <= closingDay?"]
@@ -1067,6 +1081,7 @@ flowchart TD
 ### 4.4 Parcelamento
 
 **Usuário:**
+
 ```
 Clica em "Novo parcelamento"
 → preenche: descrição, valor total, quantidade de parcelas,
@@ -1077,6 +1092,7 @@ Clica em "Novo parcelamento"
 ```
 
 **Dados:**
+
 ```mermaid
 sequenceDiagram
     participant U as Usuário
@@ -1104,6 +1120,7 @@ sequenceDiagram
 ```
 
 **Regras de negócio — cálculo de datas:**
+
 - `installmentAmount = totalAmount / totalInstallments`
 - Diferenças de centavos são absorvidas na última parcela
 - 1ª parcela calculada pela lógica de fechamento (ver fluxo 4.3)
@@ -1111,6 +1128,7 @@ sequenceDiagram
 - Criação atômica — ou todas as parcelas são criadas ou nenhuma
 
 **Regras de negócio — `paidAt` na criação:**
+
 ```mermaid
 flowchart TD
     A["Para cada parcela gerada"]
@@ -1129,6 +1147,7 @@ flowchart TD
 ### 4.5 Despesa recorrente
 
 **Usuário:**
+
 ```
 Clica em "Nova recorrência"
 → preenche: descrição, valor, tipo (despesa/receita),
@@ -1140,6 +1159,7 @@ Clica em "Nova recorrência"
 ```
 
 **Dados:**
+
 ```mermaid
 sequenceDiagram
     participant U as Usuário
@@ -1167,6 +1187,7 @@ sequenceDiagram
 ```
 
 **Regras de negócio — `paidAt` na criação:**
+
 ```mermaid
 flowchart TD
     A["Para cada mês gerado retroativamente"]
@@ -1184,6 +1205,7 @@ flowchart TD
 ```
 
 **Demais regras:**
+
 - `endDate` opcional — sem data de fim gera indefinidamente enquanto `isActive = true`
 - Desativar (`isActive = false`) preserva todas as Entries já geradas
 - Se vinculada a cartão, `dueDate` segue lógica de fechamento (fluxo 4.3)
@@ -1193,6 +1215,7 @@ flowchart TD
 ### 4.6 Marcar lançamento como pago
 
 **Usuário:**
+
 ```
 Na lista de lançamentos, encontra um PENDENTE
 → clica em "Marcar como pago"
@@ -1206,6 +1229,7 @@ Para desfazer:
 ```
 
 **Dados:**
+
 ```mermaid
 sequenceDiagram
     participant U as Usuário
@@ -1234,6 +1258,7 @@ sequenceDiagram
 ```
 
 **Regras de negócio:**
+
 - `paidAt` pode ser diferente de hoje — usuário pode registrar pagamento feito em data anterior
 - Operação reversível — `paidAt: null` volta para pendente
 - Sem cascata — marcar uma parcela não afeta as demais do mesmo parcelamento
@@ -1243,6 +1268,7 @@ sequenceDiagram
 ### 4.7 Marcar fatura do cartão como paga
 
 **Usuário:**
+
 ```
 Acessa a tela do cartão de crédito
 → seleciona o mês da fatura
@@ -1253,6 +1279,7 @@ Acessa a tela do cartão de crédito
 ```
 
 **Dados:**
+
 ```mermaid
 sequenceDiagram
     participant U as Usuário
@@ -1279,6 +1306,7 @@ sequenceDiagram
 ```
 
 **Regras de negócio:**
+
 - Somente Entries com `creditCardId` preenchido entram na fatura
 - Entries sem cartão são pagas individualmente (fluxo 4.6)
 - Entries já pagas no grupo são ignoradas na atualização
@@ -1289,6 +1317,7 @@ sequenceDiagram
 ### 4.8 Orçamento mensal
 
 **Usuário:**
+
 ```
 Acessa a tela de orçamentos
 → visualiza categorias com barra de progresso (gasto vs limite)
@@ -1298,6 +1327,7 @@ Acessa a tela de orçamentos
 ```
 
 **Dados:**
+
 ```mermaid
 sequenceDiagram
     participant U as Usuário
@@ -1326,6 +1356,7 @@ sequenceDiagram
 ```
 
 **Regras de negócio:**
+
 - `spent` calculado pelo `dueDate` — o mês que a despesa vence, não quando foi paga
 - Entries pendentes **e** pagas entram no cálculo — orçamento mostra compromissos, não só pagamentos realizados
 - Apenas Entries do tipo `EXPENSE` entram no cálculo
@@ -1336,6 +1367,7 @@ sequenceDiagram
 ### 4.9 Meta financeira
 
 **Usuário:**
+
 ```
 Acessa a tela de metas
 → visualiza metas com barra de progresso
@@ -1345,6 +1377,7 @@ Acessa a tela de metas
 ```
 
 **Dados:**
+
 ```mermaid
 sequenceDiagram
     participant U as Usuário
@@ -1375,6 +1408,7 @@ sequenceDiagram
 ```
 
 **Regras de negócio:**
+
 - `currentAmount` é sempre atualizado manualmente pelo usuário
 - `isCompleted` é definido automaticamente quando `currentAmount >= targetAmount`
 - Meta concluída pode ser reaberta — basta atualizar `currentAmount` para valor menor que `targetAmount`
@@ -1386,15 +1420,15 @@ sequenceDiagram
 
 ### Decisões de infraestrutura
 
-| Ponto | Decisão |
-|---|---|
-| Bancos locais | Dois separados — dev (porta 5432) e test (porta 5433) |
-| Branches | Git Flow simplificado: `main`, `develop`, `feature/*`, `fix/*` |
+| Ponto         | Decisão                                                          |
+| ------------- | ---------------------------------------------------------------- |
+| Bancos locais | Dois separados — dev (porta 5432) e test (porta 5433)            |
+| Branches      | Git Flow simplificado: `main`, `develop`, `feature/*`, `fix/*`   |
 | Pull Requests | Mantidos — CI obrigatório antes de mergear em `develop` e `main` |
-| Staging | Postergado para Fase 2 |
-| Deploy | Railway (recomendado), Render como alternativa |
-| CI | `ci.yml` — roda em `feature/*`, `fix/*` e `develop` |
-| CD | `deploy.yml` — roda apenas em `main` |
+| Staging       | Postergado para Fase 2                                           |
+| Deploy        | Railway (recomendado), Render como alternativa                   |
+| CI            | `ci.yml` — roda em `feature/*`, `fix/*` e `develop`              |
+| CD            | `deploy.yml` — roda apenas em `main`                             |
 
 ---
 
@@ -1405,11 +1439,13 @@ O ambiente local usa dois arquivos Docker Compose separados — um para desenvol
 #### Arquivos
 
 **`docker-compose.yml`** — banco de desenvolvimento:
+
 - PostgreSQL na porta `5432`
 - Dados salvos em volume local — persistem entre reinicializações
 - Usado no dia a dia de desenvolvimento
 
 **`docker-compose.test.yml`** — banco de testes:
+
 - PostgreSQL na porta `5433`
 - Sem volume — dados descartados ao derrubar o contêiner
 - Usado exclusivamente pelos testes automatizados
@@ -1501,12 +1537,12 @@ gitGraph
 
 #### Regras por branch
 
-| Branch | Criada a partir de | Merge para | Quem commita |
-|---|---|---|---|
-| `main` | — | — | Apenas via PR vindo de `develop` |
-| `develop` | `main` | `main` | Apenas via PR vindo de `feature/*` ou `fix/*` |
-| `feature/*` | `develop` | `develop` | Desenvolvimento direto |
-| `fix/*` | `develop` | `develop` | Correções diretas |
+| Branch      | Criada a partir de | Merge para | Quem commita                                  |
+| ----------- | ------------------ | ---------- | --------------------------------------------- |
+| `main`      | —                  | —          | Apenas via PR vindo de `develop`              |
+| `develop`   | `main`             | `main`     | Apenas via PR vindo de `feature/*` ou `fix/*` |
+| `feature/*` | `develop`          | `develop`  | Desenvolvimento direto                        |
+| `fix/*`     | `develop`          | `develop`  | Correções diretas                             |
 
 #### Convenção de nomes
 
@@ -1604,10 +1640,10 @@ Render tem plano gratuito mais generoso, mas serviços "dormem" após 15 minutos
 
 #### Ambientes
 
-| Ambiente | Branch | Banco | Plataforma |
-|---|---|---|---|
-| Development | qualquer | PostgreSQL local (Docker) | máquina local |
-| Production | `main` | PostgreSQL Railway/Render | Railway ou Render |
+| Ambiente    | Branch   | Banco                     | Plataforma        |
+| ----------- | -------- | ------------------------- | ----------------- |
+| Development | qualquer | PostgreSQL local (Docker) | máquina local     |
+| Production  | `main`   | PostgreSQL Railway/Render | Railway ou Render |
 
 > **Staging** será adicionado na Fase 2, quando o projeto tiver funcionalidades suficientes para justificar um ambiente intermediário de validação.
 
@@ -1615,14 +1651,14 @@ Render tem plano gratuito mais generoso, mas serviços "dormem" após 15 minutos
 
 As variáveis do `.env.example` são configuradas em cada ambiente:
 
-| Variável | Development | Production |
-|---|---|---|
-| `DATABASE_URL` | `localhost:5432/outtimer_dev` | URL fornecida pelo Railway/Render |
-| `JWT_SECRET` | qualquer string local | string segura gerada com `crypto` |
-| `JWT_EXPIRES_IN` | `7d` | `7d` |
-| `API_PORT` | `3333` | definido pela plataforma |
-| `NODE_ENV` | `development` | `production` |
-| `VITE_API_URL` | `http://localhost:3333` | URL pública da API em produção |
+| Variável         | Development                   | Production                        |
+| ---------------- | ----------------------------- | --------------------------------- |
+| `DATABASE_URL`   | `localhost:5432/outtimer_dev` | URL fornecida pelo Railway/Render |
+| `JWT_SECRET`     | qualquer string local         | string segura gerada com `crypto` |
+| `JWT_EXPIRES_IN` | `7d`                          | `7d`                              |
+| `API_PORT`       | `3333`                        | definido pela plataforma          |
+| `NODE_ENV`       | `development`                 | `production`                      |
+| `VITE_API_URL`   | `http://localhost:3333`       | URL pública da API em produção    |
 
 ---
 
@@ -1630,45 +1666,45 @@ As variáveis do `.env.example` são configuradas em cada ambiente:
 
 Registro cronológico das decisões tomadas e o motivo de cada uma.
 
-| Data | Decisão | Motivo |
-|---|---|---|
-| 2026-05 | TypeScript em todo o projeto (front e back) | Tipagem elimina erros em dados financeiros; uma linguagem nos dois lados reduz contexto a trocar |
-| 2026-05 | React em vez de Vue.js | Maior ecossistema, mais vagas de mercado, mais conteúdo de aprendizado disponível |
-| 2026-05 | Fastify em vez de Express | Mais rápido, TypeScript nativo, validação de schema integrada, desenvolvimento ativo |
-| 2026-05 | PostgreSQL em vez de MySQL | Suporte a `DECIMAL` com precisão exata, transações ACID mais robustas, melhor suporte a queries analíticas |
-| 2026-05 | Prisma como ORM | Migrations automáticas, client TypeScript tipado gerado automaticamente, nunca fica preso em versão do banco |
-| 2026-08 | Prisma 7.x em vez de 5.x (planejado originalmente) | Prisma 5.x é incompatível com Node.js 23+/24 (bug `isError is not a function` no CLI, sem correção). Prisma 7.x reescreveu o motor em TypeScript, resolvendo o problema |
-| 2026-08 | `prisma/` movido para dentro de `apps/api/`, com `prisma.config.ts` próprio | Arquitetura do Prisma 7.x colocaliza schema, migrations e client gerado com o backend; `prisma.config.ts` carrega a `DATABASE_URL` do `.env` da raiz do monorepo manualmente |
-| 2026-08-13 | Todas as versões da stack atualizadas para as mais recentes disponíveis (tabela da seção 1) | O documento vinha com versões de maio/2026, já defasadas frente ao que existia no mercado em agosto — reflexo direto na tabela de stack, sem necessidade de linha própria por tecnologia |
-| 2026-08-13 | Backend organizado por módulos desde o início (`src/modules/<dominio>/`) | Seguindo a decisão original de estrutura por domínio; módulo `health` implementado primeiro como fundação (rotas + service + schema Zod), padrão a ser repetido em `auth`, `entries`, etc |
-| 2026-05 | Vite em vez de Create React App | CRA descontinuado pela comunidade; Vite é o padrão atual, muito mais rápido |
-| 2026-05 | `amount` sempre positivo com `EntryType` definindo direção | Evita erros de soma de saldos com valores negativos misturados |
-| 2026-05 | `Decimal(15,2)` para valores monetários | `Float` causa erros de arredondamento (ex: 0.1 + 0.2 ≠ 0.3 em ponto flutuante) |
-| 2026-05 | Foco em controle manual na Fase 1 — sem integrações bancárias | Escopo claro e funcional antes de adicionar automações |
-| 2026-05 | `Transaction` renomeado para `Entry` (Lançamento) | Termo mais neutro e preciso para registro manual de compromissos |
-| 2026-05 | `RecurringTransaction` substituído por `RecurringExpense` com `dayOfMonth` | Frequência abstrata (DAILY/WEEKLY) desnecessária — controle pessoal é mensal |
-| 2026-05 | `EntryType` sem `TRANSFER` na Fase 1 | Transferência entre contas requer lógica bancária; entra na Fase 2 |
-| 2026-05 | `AccountType` simplificado: CHECKING, SAVINGS, CASH | INVESTMENT e WALLET postergados para quando o escopo financeiro expandir |
-| 2026-05 | `Entry.paidAt` como controle de status (null=pendente, data=pago) | Mais expressivo que um enum de status; a data de pagamento é informação útil por si |
-| 2026-05 | `Installment.creditCardId` obrigatório | Parcelamentos são sempre vinculados a cartão — define o ciclo de vencimento |
-| 2026-05 | Lógica de fechamento: `purchaseDate.day <= closingDay` → fatura corrente | Reflete o comportamento real de cartões de crédito brasileiros |
-| 2026-05 | Fatura do cartão derivada (sem entidade própria na Fase 1) | Grouping por `creditCardId + dueDate mês` é suficiente; `CreditCardInvoice` na Fase 2 se necessário |
-| 2026-05 | Redis movido para Fase 2 | Sem necessidade de cache em sistema de registro manual sem integrações externas |
-| 2026-05 | Monorepo único `outtimer-financas` | Projeto solo com tipos compartilhados; um repositório reduz overhead de configuração |
-| 2026-05 | Frontend organizado por tipo (`components/`, `hooks/`, `services/`) | Mais simples para o estágio atual; padrão Feature Sliced pode ser adotado futuramente |
-| 2026-05 | Tipos TypeScript separados por lado (web e api) | Evita complexidade de pacote compartilhado no início; pode ser unificado na Fase 2 |
-| 2026-05 | `prisma/` na raiz do monorepo | Schema pertence ao projeto todo, não só ao backend |
-| 2026-05 | `.env.example` versionado com comentários; `.env` real no `.gitignore` | Documenta todas as variáveis necessárias sem expor credenciais no repositório |
-| 2026-05 | dueDate calculado no frontend (UX) e revalidado no backend (segurança) | Frontend nunca é fonte de verdade para regras de negócio |
-| 2026-05 | Criação atômica de parcelamentos (Installment + N Entries em uma transação) | Se qualquer inserção falhar, nenhuma parcela é criada — evita dados inconsistentes |
-| 2026-05 | paidAt retroativo: meses passados = paidAt automático, futuros = null | Ao registrar compras passadas, parcelas vencidas já entram como pagas |
-| 2026-05 | Mês corrente verifica se fatura do cartão já tem Entries pagas | Consistência com pagamentos já realizados no mês atual |
-| 2026-05 | Mês corrente sem cartão = paidAt null por padrão | Sem como inferir se despesa avulsa de conta já foi paga sem que o usuário informe |
-| 2026-05 | Budget calculado por dueDate, inclui pendentes e pagas | Orçamento reflete compromissos do mês, não apenas o que foi efetivamente pago |
-| 2026-05 | isCompleted da Goal definido automaticamente pelo backend | Lógica centralizada no servidor — frontend não controla estado de conclusão |
-| 2026-05 | Docker Compose com dois bancos separados (dev e test) | Testes não contaminam dados de desenvolvimento; banco de test é descartável |
-| 2026-05 | Git Flow simplificado: main, develop, feature/*, fix/* | Boas práticas de versionamento mesmo em projeto solo; prepara para trabalho em equipe |
-| 2026-05 | Pull Requests mantidos mesmo em projeto solo | CI obrigatório antes do merge protege develop e main de código com erro |
-| 2026-05 | Staging postergado para Fase 2 | Complexidade desnecessária na Fase 1; dois ambientes (dev e prod) são suficientes |
-| 2026-05 | Railway como plataforma de deploy recomendada | Deploy conectado ao GitHub, PostgreSQL integrado, sem necessidade de gerenciar servidor |
-| 2026-05 | Deploy automático apenas na main, nunca se CI falhar | Produção só recebe código validado; develop nunca vai direto para o ar |
+| Data       | Decisão                                                                                     | Motivo                                                                                                                                                                                    |
+| ---------- | ------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-05    | TypeScript em todo o projeto (front e back)                                                 | Tipagem elimina erros em dados financeiros; uma linguagem nos dois lados reduz contexto a trocar                                                                                          |
+| 2026-05    | React em vez de Vue.js                                                                      | Maior ecossistema, mais vagas de mercado, mais conteúdo de aprendizado disponível                                                                                                         |
+| 2026-05    | Fastify em vez de Express                                                                   | Mais rápido, TypeScript nativo, validação de schema integrada, desenvolvimento ativo                                                                                                      |
+| 2026-05    | PostgreSQL em vez de MySQL                                                                  | Suporte a `DECIMAL` com precisão exata, transações ACID mais robustas, melhor suporte a queries analíticas                                                                                |
+| 2026-05    | Prisma como ORM                                                                             | Migrations automáticas, client TypeScript tipado gerado automaticamente, nunca fica preso em versão do banco                                                                              |
+| 2026-08    | Prisma 7.x em vez de 5.x (planejado originalmente)                                          | Prisma 5.x é incompatível com Node.js 23+/24 (bug `isError is not a function` no CLI, sem correção). Prisma 7.x reescreveu o motor em TypeScript, resolvendo o problema                   |
+| 2026-08    | `prisma/` movido para dentro de `apps/api/`, com `prisma.config.ts` próprio                 | Arquitetura do Prisma 7.x colocaliza schema, migrations e client gerado com o backend; `prisma.config.ts` carrega a `DATABASE_URL` do `.env` da raiz do monorepo manualmente              |
+| 2026-08-13 | Todas as versões da stack atualizadas para as mais recentes disponíveis (tabela da seção 1) | O documento vinha com versões de maio/2026, já defasadas frente ao que existia no mercado em agosto — reflexo direto na tabela de stack, sem necessidade de linha própria por tecnologia  |
+| 2026-08-13 | Backend organizado por módulos desde o início (`src/modules/<dominio>/`)                    | Seguindo a decisão original de estrutura por domínio; módulo `health` implementado primeiro como fundação (rotas + service + schema Zod), padrão a ser repetido em `auth`, `entries`, etc |
+| 2026-05    | Vite em vez de Create React App                                                             | CRA descontinuado pela comunidade; Vite é o padrão atual, muito mais rápido                                                                                                               |
+| 2026-05    | `amount` sempre positivo com `EntryType` definindo direção                                  | Evita erros de soma de saldos com valores negativos misturados                                                                                                                            |
+| 2026-05    | `Decimal(15,2)` para valores monetários                                                     | `Float` causa erros de arredondamento (ex: 0.1 + 0.2 ≠ 0.3 em ponto flutuante)                                                                                                            |
+| 2026-05    | Foco em controle manual na Fase 1 — sem integrações bancárias                               | Escopo claro e funcional antes de adicionar automações                                                                                                                                    |
+| 2026-05    | `Transaction` renomeado para `Entry` (Lançamento)                                           | Termo mais neutro e preciso para registro manual de compromissos                                                                                                                          |
+| 2026-05    | `RecurringTransaction` substituído por `RecurringExpense` com `dayOfMonth`                  | Frequência abstrata (DAILY/WEEKLY) desnecessária — controle pessoal é mensal                                                                                                              |
+| 2026-05    | `EntryType` sem `TRANSFER` na Fase 1                                                        | Transferência entre contas requer lógica bancária; entra na Fase 2                                                                                                                        |
+| 2026-05    | `AccountType` simplificado: CHECKING, SAVINGS, CASH                                         | INVESTMENT e WALLET postergados para quando o escopo financeiro expandir                                                                                                                  |
+| 2026-05    | `Entry.paidAt` como controle de status (null=pendente, data=pago)                           | Mais expressivo que um enum de status; a data de pagamento é informação útil por si                                                                                                       |
+| 2026-05    | `Installment.creditCardId` obrigatório                                                      | Parcelamentos são sempre vinculados a cartão — define o ciclo de vencimento                                                                                                               |
+| 2026-05    | Lógica de fechamento: `purchaseDate.day <= closingDay` → fatura corrente                    | Reflete o comportamento real de cartões de crédito brasileiros                                                                                                                            |
+| 2026-05    | Fatura do cartão derivada (sem entidade própria na Fase 1)                                  | Grouping por `creditCardId + dueDate mês` é suficiente; `CreditCardInvoice` na Fase 2 se necessário                                                                                       |
+| 2026-05    | Redis movido para Fase 2                                                                    | Sem necessidade de cache em sistema de registro manual sem integrações externas                                                                                                           |
+| 2026-05    | Monorepo único `outtimer-financas`                                                          | Projeto solo com tipos compartilhados; um repositório reduz overhead de configuração                                                                                                      |
+| 2026-05    | Frontend organizado por tipo (`components/`, `hooks/`, `services/`)                         | Mais simples para o estágio atual; padrão Feature Sliced pode ser adotado futuramente                                                                                                     |
+| 2026-05    | Tipos TypeScript separados por lado (web e api)                                             | Evita complexidade de pacote compartilhado no início; pode ser unificado na Fase 2                                                                                                        |
+| 2026-05    | `prisma/` na raiz do monorepo                                                               | Schema pertence ao projeto todo, não só ao backend                                                                                                                                        |
+| 2026-05    | `.env.example` versionado com comentários; `.env` real no `.gitignore`                      | Documenta todas as variáveis necessárias sem expor credenciais no repositório                                                                                                             |
+| 2026-05    | dueDate calculado no frontend (UX) e revalidado no backend (segurança)                      | Frontend nunca é fonte de verdade para regras de negócio                                                                                                                                  |
+| 2026-05    | Criação atômica de parcelamentos (Installment + N Entries em uma transação)                 | Se qualquer inserção falhar, nenhuma parcela é criada — evita dados inconsistentes                                                                                                        |
+| 2026-05    | paidAt retroativo: meses passados = paidAt automático, futuros = null                       | Ao registrar compras passadas, parcelas vencidas já entram como pagas                                                                                                                     |
+| 2026-05    | Mês corrente verifica se fatura do cartão já tem Entries pagas                              | Consistência com pagamentos já realizados no mês atual                                                                                                                                    |
+| 2026-05    | Mês corrente sem cartão = paidAt null por padrão                                            | Sem como inferir se despesa avulsa de conta já foi paga sem que o usuário informe                                                                                                         |
+| 2026-05    | Budget calculado por dueDate, inclui pendentes e pagas                                      | Orçamento reflete compromissos do mês, não apenas o que foi efetivamente pago                                                                                                             |
+| 2026-05    | isCompleted da Goal definido automaticamente pelo backend                                   | Lógica centralizada no servidor — frontend não controla estado de conclusão                                                                                                               |
+| 2026-05    | Docker Compose com dois bancos separados (dev e test)                                       | Testes não contaminam dados de desenvolvimento; banco de test é descartável                                                                                                               |
+| 2026-05    | Git Flow simplificado: main, develop, feature/_, fix/_                                      | Boas práticas de versionamento mesmo em projeto solo; prepara para trabalho em equipe                                                                                                     |
+| 2026-05    | Pull Requests mantidos mesmo em projeto solo                                                | CI obrigatório antes do merge protege develop e main de código com erro                                                                                                                   |
+| 2026-05    | Staging postergado para Fase 2                                                              | Complexidade desnecessária na Fase 1; dois ambientes (dev e prod) são suficientes                                                                                                         |
+| 2026-05    | Railway como plataforma de deploy recomendada                                               | Deploy conectado ao GitHub, PostgreSQL integrado, sem necessidade de gerenciar servidor                                                                                                   |
+| 2026-05    | Deploy automático apenas na main, nunca se CI falhar                                        | Produção só recebe código validado; develop nunca vai direto para o ar                                                                                                                    |
