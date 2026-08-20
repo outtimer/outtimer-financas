@@ -1,0 +1,65 @@
+name: CI
+
+on:
+  push:
+    branches: [feature/**, fix/**, develop]
+  pull_request:
+    branches: [develop, main]
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: outtimer
+          POSTGRES_PASSWORD: out-1991
+          POSTGRES_DB: outtimer-financas-test
+        ports:
+          - 5433:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      DATABASE_URL: postgresql://outtimer:out-1991@localhost:5433/outtimer-financas-test
+      DATABASE_URL_TEST: postgresql://outtimer:out-1991@localhost:5433/outtimer-financas-test
+      JWT_SECRET: ci-test-secret-not-for-production
+      JWT_EXPIRES_IN: 7d
+      API_PORT: 3333
+      API_HOST: 0.0.0.0
+      NODE_ENV: test
+      VITE_API_URL: http://localhost:3333
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Instala dependências
+        run: npm ci
+
+      - name: ESLint
+        run: npx eslint .
+
+      - name: Prettier (verifica formatação)
+        run: npx prettier --check .
+
+      - name: Compila e type-checks a API
+        run: npm run build --workspace=apps/api
+
+      - name: Compila e type-checks o frontend
+        run: npm run build --workspace=apps/web
+
+      - name: Aplica migrations no banco de teste
+        run: npm exec --workspace=apps/api -- prisma migrate deploy
+
+      - name: Roda os testes (Vitest)
+        run: npm run test --workspace=apps/api
