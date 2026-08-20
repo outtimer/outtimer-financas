@@ -1,0 +1,22 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy no Railway (ou aviso se ainda não configurado)
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+        run: |
+          if [ -z "$RAILWAY_TOKEN" ]; then
+            echo "RAILWAY_TOKEN nao esta configurado nos secrets do repositorio. Deploy pulado — configure quando a Fase 1 de deploy no Railway comecar."
+          else
+            npm install -g @railway/cli
+            railway up --service api
+          fi

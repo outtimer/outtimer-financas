@@ -7,6 +7,10 @@ import eslintConfigPrettier from "eslint-config-prettier";
 export default defineConfig([
   {
     ignores: [
+      "**/dist/**",
+      "**/build/**",
+      "**/node_modules/**",
+      "**/generated/**",
       "**/vitest.config.ts",
       "**/vite.config.ts",
       "**/prisma.config.ts",
@@ -30,7 +34,7 @@ export default defineConfig([
       globals: { ...globals.node },
       parser: tseslint.parser,
       parserOptions: {
-        project: ["./apps/api/tsconfig.json"],
+        project: ["./apps/api/tsconfig.eslint.json"],
         tsconfigRootDir: import.meta.dirname,
       },
     },
