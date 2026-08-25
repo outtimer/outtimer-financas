@@ -8,6 +8,7 @@ import jwt from "@fastify/jwt";
 import cors from "@fastify/cors";
 import { healthRoutes } from "./modules/health/health.routes.js";
 import { authRoutes } from "./modules/auth/auth.routes.js";
+import { accountRoutes } from "./modules/accounts/accounts.routes.js";
 
 const app = Fastify({ logger: true });
 
@@ -21,6 +22,7 @@ app.register(jwt, {
 
 app.register(healthRoutes);
 app.register(authRoutes);
+app.register(accountRoutes);
 
 const start = async () => {
   try {
